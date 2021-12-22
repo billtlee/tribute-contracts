@@ -1,8 +1,8 @@
 [
   {
-    "network": "ganache",
-    "daoFactoryAddress": "0x2612Af3A521c2df9EAF28422Ca335b04AdF3ac66",
-    "daoFactoryStartBlock": 13,
+    "network": "harmony",
+    "daoFactoryAddress": "0x83085fA7310dB35aB3929c4c465eDcc1d5eBFFe8",
+    "daoFactoryStartBlock": 20298595,
     "GITHUB_USERNAME": "openlawteam",
     "SUBGRAPH_NAME": "tribute"
   }
