@@ -42,6 +42,12 @@ module.exports = async (deployer, network, accounts) => {
     case "harmonytest":
       res = await deployHarmonyTestDao(deployFunction, network);
       break;
+    case "mumbai":
+      res = await deployMumbaiDao(deployFunction, network);
+      break;
+    case "polygon":
+      res = await deployPolygonDao(deployFunction, network);
+      break;
     default:
       throw Error(`Unsupported network: ${network}`);
   }
@@ -150,6 +156,49 @@ const deployRinkebyDao = async (deployFunction, network) => {
   });
 };
 
+const deployMumbaiDao = async (deployFunction, network) => {
+  return await deployDao({
+    ...truffleImports,
+    deployFunction,
+    unitPrice: toBN(toWei("100", "finney")),
+    nbUnits: toBN("100000"),
+    tokenAddr: ETH_TOKEN,
+    erc20TokenName: getEnvVar("ERC20_TOKEN_NAME"),
+    erc20TokenSymbol: getEnvVar("ERC20_TOKEN_SYMBOL"),
+    erc20TokenDecimals: getEnvVar("ERC20_TOKEN_DECIMALS"),
+    erc20TokenAddress: UNITS,
+    maxChunks: toBN("100000"),
+    maxUnits: getOptionalEnvVar("MAX_UNITS", maxUnits),
+    maxMembers: getOptionalEnvVar("MAX_MEMBERS", toBN(1000)),
+    votingPeriod: getOptionalEnvVar("VOTING_PERIOD_SECONDS", 600), // 600 secs = 10 min
+    gracePeriod: getOptionalEnvVar("GRACE_PERIOD_SECONDS", 600), // 600 secs = 10 min
+    offchainVoting: true,
+    chainId: getNetworkDetails(network).chainId,
+    deployTestTokens: true,
+    finalize: false,
+    maxExternalTokens: 100,
+    couponCreatorAddress: getOptionalEnvVar(
+      "COUPON_CREATOR_ADDR",
+      getEnvVar("DAO_OWNER_ADDR")
+    ),
+    kycCouponCreatorAddress: getOptionalEnvVar(
+      "KYC_COUPON_CREATOR_ADDR",
+      getEnvVar("DAO_OWNER_ADDR")
+    ),
+    daoName: getEnvVar("DAO_NAME"),
+    owner: getEnvVar("DAO_OWNER_ADDR"),
+    offchainAdmin: getOptionalEnvVar(
+      "OFFCHAIN_ADMIN_ADDR",
+      getEnvVar("DAO_OWNER_ADDR")
+    ),
+    fundTargetAddress: getOptionalEnvVar(
+      "KYC_MULTISIG_FUND_ADDR",
+      ZERO_ADDRESS
+    ),
+    wethAddress: "0xc778417e063141139fce010982780140aa0cd5ab",
+  });
+};
+
 const deployGanacheDao = async (deployFunction, network, accounts) => {
   const daoOwnerAddress = accounts[0];
 
@@ -196,6 +245,41 @@ const deployGanacheDao = async (deployFunction, network, accounts) => {
 };
 
 const deployMainnetDao = async (deployFunction, network) => {
+  return await deployDao({
+    ...truffleImports,
+    deployFunction,
+    unitPrice: toBN(toWei("100", "finney")),
+    nbUnits: toBN("100000"),
+    maxAmount: getOptionalEnvVar("MAX_AMOUNT", maxAmount),
+    maxUnits: getOptionalEnvVar("MAX_UNITS", maxUnits),
+    maxMembers: getEnvVar("MAX_MEMBERS"),
+    tokenAddr: ETH_TOKEN,
+    erc20TokenName: getEnvVar("ERC20_TOKEN_NAME"),
+    erc20TokenSymbol: getEnvVar("ERC20_TOKEN_SYMBOL"),
+    erc20TokenDecimals: getEnvVar("ERC20_TOKEN_DECIMALS"),
+    erc20TokenAddress: UNITS,
+    maxChunks: toBN("100000"),
+    votingPeriod: parseInt(getEnvVar("VOTING_PERIOD_SECONDS")),
+    gracePeriod: parseInt(getEnvVar("GRACE_PERIOD_SECONDS")),
+    offchainVoting: true,
+    chainId: getNetworkDetails(network).chainId,
+    deployTestTokens: false,
+    finalize: false,
+    maxExternalTokens: 100,
+    couponCreatorAddress: getEnvVar("COUPON_CREATOR_ADDR"),
+    kycCouponCreatorAddress: getEnvVar("KYC_COUPON_CREATOR_ADDR"),
+    fundTargetAddress: getOptionalEnvVar(
+      "KYC_MULTISIG_FUND_ADDR",
+      ZERO_ADDRESS
+    ),
+    daoName: getEnvVar("DAO_NAME"),
+    owner: getEnvVar("DAO_OWNER_ADDR"),
+    offchainAdmin: getEnvVar("OFFCHAIN_ADMIN_ADDR"),
+    wethAddress: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+  });
+};
+
+const deployPolygonDao = async (deployFunction, network) => {
   return await deployDao({
     ...truffleImports,
     deployFunction,

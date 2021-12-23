@@ -61,6 +61,17 @@ module.exports = {
       network_id: 1666700000,
       skipDryRun: true,
     },
+    mumbai: {
+      provider: getNetworkProvider,
+      network_id: 8001,
+      gasPrice: 10000000000,
+      skipDryRun: true,
+    },
+    polygon: {
+      provider: getNetworkProvider,
+      network_id: 137,
+      skipDryRun: true,
+    },
     coverage: {
       host: "localhost",
       network_id: "*",
