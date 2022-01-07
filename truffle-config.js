@@ -65,6 +65,7 @@ module.exports = {
       provider: getNetworkProvider,
       network_id: 137,
       skipDryRun: true,
+      gasPrice: 550000000000,
     },
     polygontest: {
       provider: getNetworkProvider,
